@@ -1,0 +1,59 @@
+#include <SoftwareSerial.h>
+int sensorValue; // variable to store the output from the sensor
+
+SoftwareSerial nano1(2,3);// rx tx
+
+char sbuffer[14], ch;
+unsigned char pos;
+unsigned char read1, read2, read3;
+boolean newData=false;
+
+void setup() {
+nano1.begin(9600);
+
+}
+
+void loop() {
+recvChar();
+showNewData();
+}
+
+void recvChar() {
+if (Serial.available() > 0)
+{
+
+while(Serial.available()>0)
+{
+ch = Serial.read(); //loop till character received
+if(ch==0x0A) // if received character is <LF>, 0x0A, 10 then process buffer
+{
+pos = 0; // buffer position reset for next reading
+newData=true;
+// extract data from serial buffer to 8 bit integer value
+// convert data from ASCII to decimal
+read1 = ((sbuffer[1]-'0')*100) + ((sbuffer[2]-'0')*10) +(sbuffer[3]-'0');
+read2 = ((sbuffer[6]-'0')*100) + ((sbuffer[7]-'0')*10) +(sbuffer[8]-'0');
+read3 = ((sbuffer[11]-'0')*100) + ((sbuffer[12]-'0')*10) +(sbuffer[13]-'0');
+}
+else
+{ //store serial data to buffer
+sbuffer[pos] = ch;
+pos++;
+}
+}
+}
+}
+
+void showNewData() {
+if (newData == true)
+{
+String r1,r2,r3;
+r1=String(read1);
+r2=String(read2);
+r3=String(read3);
+nano1.write(r1);
+nano2.write(r2);
+nano3.write(r3);
+newData = false;
+}
+}
