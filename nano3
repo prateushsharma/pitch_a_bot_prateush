@@ -1,0 +1,59 @@
+#include <Wire.h>
+#include "MAX30100_PulseOximeter.h"
+#include <SoftwareSerial.h>
+SoftwareSerial nano3(8,9);// rx tx
+
+#define REPORTING_PERIOD_MS     1000
+
+// Create a PulseOximeter object
+PulseOximeter pox;
+
+// Time at which the last beat occurred
+uint32_t tsLastReport = 0;
+
+// Callback routine is executed when a pulse is detected
+void onBeatDetected() {
+    
+}
+
+void setup() {
+    nano3.begin(9600);
+
+    pinMode(7,INPUT_PULLUP);
+pinMode(8,OUTPUT);
+
+    // Initialize sensor
+    if (!pox.begin()) {
+        
+        for(;;);
+    } else {
+        
+    }
+
+	// Configure sensor to use 7.6mA for LED drive
+	pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
+
+    // Register a callback routine
+    pox.setOnBeatDetectedCallback(onBeatDetected);
+}
+
+void loop() {
+    // Read from the sensor
+    pox.update();
+int a=digitalRead(7);
+if(a==0)
+{
+digitalWrite(8,1);
+delay(500);
+digitalWrite(8,0);
+    // Grab the updated heart rate and SpO2 levels
+    if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
+        nano3.write("Heart rate: ");
+        nano3.write(pox.getHeartRate());
+        nano3.write(" bpm / SpO2:");
+        nano3.write(pox.getSpO2());
+        
+
+        tsLastReport = millis();}
+    }
+}
