@@ -1,0 +1,25 @@
+
+#include <Wire.h>
+#include <Adafruit_MLX90614.h>
+#include <SoftwareSerial.h>
+SoftwareSerial nano3(4,5);// rx tx
+Adafruit_MLX90614 mlx = Adafruit_MLX90614();
+int button;
+
+void setup() {
+  nano3.begin(9600);
+  pinMode(3,INPUT_PULLUP);
+pinMode(6,OUTPUT);
+  mlx.begin();  
+}
+
+void loop() {
+  button=digitalRead(3);
+if(button==0){
+digitalWrirte(6,1);
+delay(1000);
+digitalWrite(6,0);
+   nano1.write(mlx.readObjectTempC()); 
+  }
+  delay(500);
+}
