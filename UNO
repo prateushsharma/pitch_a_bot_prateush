@@ -1,0 +1,78 @@
+
+#include <STEMMA_LiquidCrystal.h>
+STEMMA_LiquidCrystal lcd;
+#define TIMEOUT 5000 // mS
+#define LED 5
+SoftwareSerial wifi(7, 6); // RX, TX
+SoftwareSerial n1(3,2);// rx,tx
+SoftwareSerial n2(4,5);// rx,tx
+SoftwareSerial n3(9,8);// rx,tx
+const int button = 11;
+int button_state = 0;
+ 
+void setup()
+{
+ lcd.begin(21, 8);
+pinMode(10,INPUT_PULLUP);
+ wifi.begin(9600);
+ SendCommand("AT+RST", "Ready");
+ delay(5000);
+ SendCommand("AT+CWMODE=1","OK");
+ SendCommand("AT+CIFSR", "OK");
+ SendCommand("AT+CIPMUX=1","OK");
+ SendCommand("AT+CIPSERVER=1,80","OK");
+}
+ 
+void loop(){
+String s="";
+
+// checking doctors message
+ while (mySerial.available()){
+   s=mySerial.readString();
+   
+  }
+lcd.println("Docors message");
+lcd.println(s);
+delay(10000);
+int a=digitalRead(a);
+if(a==0){
+lcd.clear();
+  char data1,data2,data3;
+
+if (n1.available()) {
+    // Read all available bytes
+    while (mySerial2.available()) {
+       data1 = mySerial2.read();
+      Serial.write(data);
+    }
+  }
+lcd.println(data1);
+if (n2.available()) {
+    // Read all available bytes
+    while (mySerial2.available()) {
+       data2 = mySerial2.read();
+      Serial.write(data);
+    }
+  }
+lcd.println(data2);
+if (n3.available()) {
+    // Read all available bytes
+    while (mySerial2.available()) {
+       data3 = mySerial2.read();
+      Serial.write(data);
+    }
+  }
+
+
+lcd.println(data3);
+
+
+
+wifi.println(data1);
+wifi.println(data2);
+wifi.println(data3);
+
+delay(2000);
+}
+delay(500);
+}
